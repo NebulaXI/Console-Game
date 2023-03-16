@@ -93,7 +93,7 @@ namespace RPG_Game.Models.Screens
                 {
                     foreach (var monster in monsters)
                     {
-                        if (row == monster.Position["monsterRow"] && col == monster.Position["monsterCol"])
+                        if (row == monster.Position[0] && col == monster.Position[1])
                         {
                             field[row, col] = monster.Symbol;
                             continue;
@@ -155,10 +155,10 @@ namespace RPG_Game.Models.Screens
             foreach (var monster in monsters)
             {
                 List<int[]> monsterPossibleMoves = CheckAllPossibleMonsterMoves(monster, field);
-                int[] optimalMonsterMove = GetOptimalMonsterMove(monsterPossibleMoves,playerRow,playerCol,field,monster.Range);
-                monster.Position["monsterRow"] = optimalMonsterMove[0];
-                monster.Position["monsterCol"] = optimalMonsterMove[1];
-                if(CheckIfMonsterIsNextToPlayer(playerRow,playerCol, monster.Position["monsterRow"], monster.Position["monsterCol"]))
+                int[] optimalMonsterMove = GetOptimalMonsterMove(monsterPossibleMoves,playerRow,playerCol,field,monster);
+                monster.Position[0] = optimalMonsterMove[0];
+                monster.Position[1] = optimalMonsterMove[1];
+                if(CheckIfMonsterIsNextToPlayer(playerRow,playerCol, monster.Position[0], monster.Position[1]))
                 {
                     player.Health=monster.Attack(player, monster);
                 }
@@ -167,44 +167,44 @@ namespace RPG_Game.Models.Screens
         static List<int[]> CheckAllPossibleMonsterMoves(Monster monster, char[,] field)
         {
             List<int[]> possiblePossitions=new List<int[]>();
-            int initialMonsterRow = monster.Position["monsterRow"];
-            int initialMonsterCol = monster.Position["monsterCol"];
+            int initialMonsterRow = monster.Position[0];
+            int initialMonsterCol = monster.Position[1];
             int[] monsterPosition;
             //'w':
-            monster.Position["monsterRow"] = CheckIfIsUnderValue(field.GetLength(0), initialMonsterRow, monster.Range);
-            monsterPosition = new int[] { monster.Position["monsterRow"],initialMonsterCol };
+            monster.Position[0] = CheckIfIsUnderValue(field.GetLength(0), initialMonsterRow, monster.Range);
+            monsterPosition = new int[] { monster.Position[0],initialMonsterCol };
             possiblePossitions.Add(monsterPosition);
             //'s':
-            monster.Position["monsterRow"] = CheckIfIsOverValue(field.GetLength(0), initialMonsterRow, monster.Range);
-            monsterPosition = new int[] { monster.Position["monsterRow"], initialMonsterCol };
+            monster.Position[0] = CheckIfIsOverValue(field.GetLength(0), initialMonsterRow, monster.Range);
+            monsterPosition = new int[] { monster.Position[0], initialMonsterCol };
             possiblePossitions.Add(monsterPosition);
             //'d':
-            monster.Position["monsterCol"] = CheckIfIsOverValue(field.GetLength(1), initialMonsterCol, monster.Range);
-            monsterPosition = new int[] {initialMonsterRow, monster.Position["monsterCol"] };
+            monster.Position[1] = CheckIfIsOverValue(field.GetLength(1), initialMonsterCol, monster.Range);
+            monsterPosition = new int[] {initialMonsterRow, monster.Position[1] };
             possiblePossitions.Add(monsterPosition);
             //'a':
-            monster.Position["monsterCol"] = CheckIfIsUnderValue(field.GetLength(1), initialMonsterCol, monster.Range);
-            monsterPosition = new int[] { initialMonsterRow, monster.Position["monsterCol"] };
+            monster.Position[1] = CheckIfIsUnderValue(field.GetLength(1), initialMonsterCol, monster.Range);
+            monsterPosition = new int[] { initialMonsterRow, monster.Position[1] };
             possiblePossitions.Add(monsterPosition);
             //'e':
-            monster.Position["monsterRow"] = CheckIfIsUnderValue(field.GetLength(0), initialMonsterRow, monster.Range);
-            monster.Position["monsterCol"] = CheckIfIsOverValue(field.GetLength(1), initialMonsterCol, monster.Range);
-            monsterPosition = new int[] { monster.Position["monsterRow"], monster.Position["monsterCol"] };
+            monster.Position[0] = CheckIfIsUnderValue(field.GetLength(0), initialMonsterRow, monster.Range);
+            monster.Position[1] = CheckIfIsOverValue(field.GetLength(1), initialMonsterCol, monster.Range);
+            monsterPosition = new int[] { monster.Position[0], monster.Position[1] };
             possiblePossitions.Add(monsterPosition);
             //'x':
-            monster.Position["monsterRow"] = CheckIfIsOverValue(field.GetLength(0), initialMonsterRow, monster.Range);
-            monster.Position["monsterCol"] = CheckIfIsOverValue(field.GetLength(1), initialMonsterCol, monster.Range);
-            monsterPosition = new int[] { monster.Position["monsterRow"], monster.Position["monsterCol"] };
+            monster.Position[0] = CheckIfIsOverValue(field.GetLength(0), initialMonsterRow, monster.Range);
+            monster.Position[1] = CheckIfIsOverValue(field.GetLength(1), initialMonsterCol, monster.Range);
+            monsterPosition = new int[] { monster.Position[0], monster.Position[1] };
             possiblePossitions.Add(monsterPosition);
             //'q':
-            monster.Position["monsterRow"] = CheckIfIsUnderValue(field.GetLength(0), initialMonsterRow, monster.Range);
-            monster.Position["monsterCol"] = CheckIfIsUnderValue(field.GetLength(1), initialMonsterCol, monster.Range);
-            monsterPosition = new int[] { monster.Position["monsterRow"], monster.Position["monsterCol"] };
+            monster.Position[0] = CheckIfIsUnderValue(field.GetLength(0), initialMonsterRow, monster.Range);
+            monster.Position[1] = CheckIfIsUnderValue(field.GetLength(1), initialMonsterCol, monster.Range);
+            monsterPosition = new int[] { monster.Position[0], monster.Position[1] };
             possiblePossitions.Add(monsterPosition);
             //'z':
-            monster.Position["monsterRow"] = CheckIfIsOverValue(field.GetLength(0), initialMonsterRow, monster.Range);
-            monster.Position["monsterCol"] = CheckIfIsUnderValue(field.GetLength(1), initialMonsterCol, monster.Range);
-            monsterPosition = new int[] { monster.Position["monsterRow"], monster.Position["monsterCol"] };
+            monster.Position[0] = CheckIfIsOverValue(field.GetLength(0), initialMonsterRow, monster.Range);
+            monster.Position[1] = CheckIfIsUnderValue(field.GetLength(1), initialMonsterCol, monster.Range);
+            monsterPosition = new int[] { monster.Position[0], monster.Position[1] };
             possiblePossitions.Add(monsterPosition);
 
             return possiblePossitions;
@@ -237,7 +237,7 @@ namespace RPG_Game.Models.Screens
             return returnPick;
         }
 
-        static int[] GetOptimalMonsterMove(List<int[]> monsterPossibleMoves,int playerRow,int playerCol,char [,] field,int range)
+        static int[] GetOptimalMonsterMove(List<int[]> monsterPossibleMoves,int playerRow,int playerCol,char [,] field,Monster monster)
         {
             int optimalMonsterRow = 0;
             int optimalMonsterCol = 0;
@@ -252,13 +252,13 @@ namespace RPG_Game.Models.Screens
                 //Check up for monster
                 if (playerRow < monsterRow)
                 {
-                    int possibleMonsterRow = CheckIfIsUnderValue(field.GetLength(0), monsterRow, range);
+                    int possibleMonsterRow = CheckIfIsUnderValue(field.GetLength(0), monster.Position[0], monster.Range);
                     if (Math.Abs(playerRow-possibleMonsterRow)<initialRowDifference)
                     {
                         //Check 'q'
                         if (playerCol<monsterCol)
                         {
-                            int possibleMonsterCol = CheckIfIsUnderValue(field.GetLength(1),monsterCol, range);
+                            int possibleMonsterCol = CheckIfIsUnderValue(field.GetLength(1), monster.Position[1], monster.Range);
                             if (Math.Abs(playerCol - possibleMonsterCol) < initialColDifference)
                             {
                                 initialColDifference= possibleMonsterCol;
@@ -269,7 +269,7 @@ namespace RPG_Game.Models.Screens
                         //Check 'e'
                         else if (playerCol > monsterCol)
                         {
-                            int possibleMonsterCol = CheckIfIsOverValue(field.GetLength(1),monsterCol, range);
+                            int possibleMonsterCol = CheckIfIsOverValue(field.GetLength(1), monster.Position[1], monster.Range);
                             if (Math.Abs(playerCol - possibleMonsterCol) < initialColDifference)
                             {
                                 initialColDifference = possibleMonsterCol;
@@ -290,13 +290,13 @@ namespace RPG_Game.Models.Screens
                 //Check down positions for monster
                 else
                 {
-                    int possibleMonsterRow = CheckIfIsOverValue(field.GetLength(0), monsterRow, range);
+                    int possibleMonsterRow = CheckIfIsOverValue(field.GetLength(0), monster.Position[0], monster.Range);
                     if (Math.Abs(playerRow - possibleMonsterRow) < initialRowDifference)
                     {
                         //Check 'z'
                         if (playerCol < monsterCol)
                         {
-                            int possibleMonsterCol = CheckIfIsUnderValue(field.GetLength(1), monsterCol, range);
+                            int possibleMonsterCol = CheckIfIsUnderValue(field.GetLength(1), monster.Position[1], monster.Range);
                             if (Math.Abs(playerCol - possibleMonsterCol) < initialColDifference)
                             {
                                 initialColDifference = possibleMonsterCol;
@@ -307,7 +307,7 @@ namespace RPG_Game.Models.Screens
                         //Check 'x'
                         else if (playerCol > monsterCol)
                         {
-                            int possibleMonsterCol = CheckIfIsOverValue(field.GetLength(1), monsterCol, range);
+                            int possibleMonsterCol = CheckIfIsOverValue(field.GetLength(1), monster.Position[1], monster.Range);
                             if (Math.Abs(playerCol - possibleMonsterCol) < initialColDifference)
                             {
                                 initialColDifference = possibleMonsterCol;
@@ -452,7 +452,7 @@ namespace RPG_Game.Models.Screens
             Monster monsterReturn=new Monster();
             foreach (var monster in monsters)
             {
-                if (monsterRow == monster.Position["monsterRow"] && monsterCol == monster.Position["monsterCol"])
+                if (monsterRow == monster.Position[0] && monsterCol == monster.Position[1])
                 {
                     monsterReturn= monster;
                 }

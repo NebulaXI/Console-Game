@@ -18,7 +18,7 @@ namespace RPG_Game.Models.Players
         public int Damage { get; set; }
         public string Name { get; set; }
         public char Symbol { get; }
-        public Dictionary<string,int> Position { get; set; }=new Dictionary<string, int>();
+        public int[] Position { get; set; }
         public Monster()
         {
             Random r = new Random();
@@ -31,17 +31,14 @@ namespace RPG_Game.Models.Players
             Position=CreatePosition();
         }
 
-        private Dictionary<string, int> CreatePosition()
+        private int[] CreatePosition()
         {
             Random r = new Random();
             int monsterRow = r.Next(1, 10);
             int monsterCol = r.Next(1, 10);
-            Dictionary<string, int> returnDic = new Dictionary<string, int>
-            {
-                { "monsterRow", monsterRow },
-                { "monsterCol", monsterCol }
-            };
-            return returnDic;
+            int[] returnArr = new int[] { monsterRow, monsterCol };
+            
+            return returnArr;
         }
         public void Setup()
         {
